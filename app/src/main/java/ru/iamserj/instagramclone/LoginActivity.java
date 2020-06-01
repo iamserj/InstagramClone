@@ -78,16 +78,28 @@ public class LoginActivity extends AppCompatActivity {
 	}
 	
 	private void loginUser() {
+		if (et_username.getText().toString().equals("")
+			|| et_password.getText().toString().equals("")) {
+			FancyToast.makeText(LoginActivity.this, "All fields are required", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
+			return;
+		}
+		
 		ParseUser.logInInBackground(et_username.getText().toString(), et_password.getText().toString(),
 				new LogInCallback() {
 					@Override
 					public void done(ParseUser user, ParseException e) {
 						if (user != null && e == null) {
 							FancyToast.makeText(LoginActivity.this, user.getUsername() + " is logged in", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+							goSocialMediaActivity();
 						} else {
 							FancyToast.makeText(LoginActivity.this, "Login error: " + e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
 						}
 					}
 				});
+	}
+	
+	private void goSocialMediaActivity() {
+		Intent intent = new Intent(LoginActivity.this, SocialMediaActivity.class);
+		startActivity(intent);
 	}
 }

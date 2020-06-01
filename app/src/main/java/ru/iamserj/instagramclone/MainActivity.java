@@ -2,13 +2,13 @@ package ru.iamserj.instagramclone;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 		bt_signup = findViewById(R.id.bt_signup);
 		
 		if (ParseUser.getCurrentUser() != null) {
-			ParseUser.logOut();
+			goSocialMediaActivity();
 		}
 		
 		bt_login.setOnClickListener(new View.OnClickListener() {
@@ -75,24 +75,23 @@ public class MainActivity extends AppCompatActivity {
 		});
 		
 		
-		
 		bt_signup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				if (et_email.getText().toString().equals("")
-				|| et_username.getText().toString().equals("")
-				|| et_password.getText().toString().equals("")) {
-					FancyToast.makeText(MainActivity.this, "All fields are required", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
-				} else {
-					signUpUser();
-				}
+				signUpUser();
 			}
 		});
 		
 	}
 	
 	private void signUpUser() {
+		if (et_email.getText().toString().equals("")
+			|| et_username.getText().toString().equals("")
+			|| et_password.getText().toString().equals("")) {
+			FancyToast.makeText(MainActivity.this, "All fields are required", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
+			return;
+		}
+		
 		final ParseUser appUser = new ParseUser();
 		appUser.setEmail(et_email.getText().toString());
 		appUser.setUsername(et_username.getText().toString());
@@ -107,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
 			public void done(ParseException e) {
 				if (e == null) {
 					FancyToast.makeText(MainActivity.this, appUser.getUsername() + " is signed up", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+					goSocialMediaActivity();
 				} else {
 					FancyToast.makeText(MainActivity.this, "Sign up error: " + e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
 				}
@@ -114,5 +114,10 @@ public class MainActivity extends AppCompatActivity {
 		});
 		
 		progressDialog.dismiss();
+	}
+	
+	private void goSocialMediaActivity() {
+		Intent intent = new Intent(MainActivity.this, SocialMediaActivity.class);
+		startActivity(intent);
 	}
 }

@@ -5,4 +5,7 @@
 	<string name="back4app_app_id">PXouWWNgIN1Uovru8J9baD8D9t7mSdivFANIVkSD</string>
 	<string name="back4app_client_key">uiFVWRG4E1TcbD3oQvL1TRbYAreUUvmayZWa7kSv</string>
 
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
