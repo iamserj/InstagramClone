@@ -7,19 +7,20 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class LoginActivity extends AppCompatActivity {
 	
 	private ConstraintLayout cl_root;
 	private EditText et_username, et_password;
-	private Button bt_login, bt_signup;
+	private Button bt_login;
+	private TextView bt_signup;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.parse.ParseException;
@@ -22,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
 	
 	private ConstraintLayout cl_root;
 	private EditText et_username, et_email, et_password;
-	private Button bt_login, bt_signup;
+	private Button bt_signup;
+	private TextView bt_login;
 	
 	
 	@Override
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 		bt_signup = findViewById(R.id.bt_signup);
 		
 		if (ParseUser.getCurrentUser() != null) {
+			FancyToast.makeText(MainActivity.this, "Signed in as " + ParseUser.getCurrentUser().getUsername(), FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
 			goSocialMediaActivity();
 		}
 		

@@ -5,30 +5,27 @@
 		android:layout_height="match_parent"
 		tools:context=".SocialMediaActivity">
 
-	<com.google.android.material.appbar.AppBarLayout>
-
-	</com.google.android.material.appbar.AppBarLayout>
-
-
-	<androidx.appcompat.widget.AppBarLayout
-			android:id = "@+id/appBarLayout2"
+	<com.google.android.material.appbar.AppBarLayout
+			android:id="@+id/appBarLayout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 
-		<include android:id="@+id/tabsToolbar"
-				layout="@layout/tabs_toolbar"/>
+		<include
+				android:id="@id/tabsToolbar"
+				layout="@layout/tabs_toolbar" />
 
+		<com.google.android.material.tabs.TabLayout
+				android:id="@+id/tabLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-	</androidx.appcompat.widget.AppBarLayout>
+	</com.google.android.material.appbar.AppBarLayout>
 
-<android.support.design.widget.AppBarLayout
-		android:id = "@+id/appBarLayout"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
-	<include android:id="@+id/tabsToolbar"
-		layout="@layout/tabs_toolbar"/>
-
-</android.support.design.widget.AppBarLayout>
+	<androidx.viewpager.widget.ViewPager
+			android:id="@+id/viewPager"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/appBarLayout"	/>
 
 </RelativeLayout>
