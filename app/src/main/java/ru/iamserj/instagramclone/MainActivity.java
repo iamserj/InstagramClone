@@ -21,10 +21,10 @@ public class MainActivity extends AppCompatActivity {
 	
 	private static final String TAG = "MY_LOG_TAG";
 	
-	private ConstraintLayout cl_root;
-	private EditText et_username, et_email, et_password;
-	private Button bt_signup;
-	private TextView bt_login;
+	private ConstraintLayout cl_signup_root;
+	private EditText et_signup_name, et_signup_email, et_signup_password;
+	private Button bt_signup_signup;
+	private TextView tv_signup_login;
 	
 	
 	@Override
@@ -34,19 +34,19 @@ public class MainActivity extends AppCompatActivity {
 		
 		setTitle("Sign Up");
 		
-		cl_root = findViewById(R.id.cl_root);
-		et_username = findViewById(R.id.et_username);
-		et_email = findViewById(R.id.et_email);
-		et_password = findViewById(R.id.et_password);
-		bt_login = findViewById(R.id.bt_login);
-		bt_signup = findViewById(R.id.bt_signup);
+		cl_signup_root = findViewById(R.id.cl_signup_root);
+		et_signup_name = findViewById(R.id.et_signup_name);
+		et_signup_email = findViewById(R.id.et_signup_email);
+		et_signup_password = findViewById(R.id.et_signup_password);
+		bt_signup_signup = findViewById(R.id.bt_signup_signup);
+		tv_signup_login = findViewById(R.id.tv_signup_login);
 		
 		if (ParseUser.getCurrentUser() != null) {
 			FancyToast.makeText(MainActivity.this, "Signed in as " + ParseUser.getCurrentUser().getUsername(), FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
 			goSocialMediaActivity();
 		}
 		
-		bt_login.setOnClickListener(new View.OnClickListener() {
+		tv_signup_login.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 		
-		et_password.setOnKeyListener(new View.OnKeyListener() {
+		et_signup_password.setOnKeyListener(new View.OnKeyListener() {
 			@Override
 			public boolean onKey(View view, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 		
-		cl_root.setOnClickListener(new View.OnClickListener() {
+		cl_signup_root.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 		});
 		
 		
-		bt_signup.setOnClickListener(new View.OnClickListener() {
+		bt_signup_signup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				signUpUser();
@@ -88,20 +88,20 @@ public class MainActivity extends AppCompatActivity {
 	}
 	
 	private void signUpUser() {
-		if (et_email.getText().toString().equals("")
-			|| et_username.getText().toString().equals("")
-			|| et_password.getText().toString().equals("")) {
+		if (et_signup_email.getText().toString().equals("")
+			|| et_signup_name.getText().toString().equals("")
+			|| et_signup_password.getText().toString().equals("")) {
 			FancyToast.makeText(MainActivity.this, "All fields are required", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
 			return;
 		}
 		
 		final ParseUser appUser = new ParseUser();
-		appUser.setEmail(et_email.getText().toString());
-		appUser.setUsername(et_username.getText().toString());
-		appUser.setPassword(et_password.getText().toString());
+		appUser.setEmail(et_signup_email.getText().toString());
+		appUser.setUsername(et_signup_name.getText().toString());
+		appUser.setPassword(et_signup_password.getText().toString());
 		
 		ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-		progressDialog.setMessage("Signing up " + et_username.getText().toString());
+		progressDialog.setMessage("Signing up " + et_signup_name.getText().toString());
 		progressDialog.show();
 		
 		appUser.signUpInBackground(new SignUpCallback() {

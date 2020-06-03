@@ -17,10 +17,10 @@ import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class LoginActivity extends AppCompatActivity {
 	
-	private ConstraintLayout cl_root;
-	private EditText et_username, et_password;
-	private Button bt_login;
-	private TextView bt_signup;
+	private ConstraintLayout cl_login_root;
+	private EditText et_login_name, et_login_password;
+	private Button bt_login_login;
+	private TextView tv_login_signup;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +29,17 @@ public class LoginActivity extends AppCompatActivity {
 		
 		setTitle("Login");
 		
-		cl_root = findViewById(R.id.cl_root);
-		et_username = findViewById(R.id.et_username);
-		et_password = findViewById(R.id.et_password);
-		bt_login = findViewById(R.id.bt_login);
-		bt_signup = findViewById(R.id.bt_signup);
+		cl_login_root = findViewById(R.id.cl_login_root);
+		et_login_name = findViewById(R.id.et_login_name);
+		et_login_password = findViewById(R.id.et_login_password);
+		bt_login_login = findViewById(R.id.bt_login_login);
+		tv_login_signup = findViewById(R.id.tv_login_signup);
 		
 		if (ParseUser.getCurrentUser() != null) {
 			ParseUser.logOut();
 		}
 		
-		cl_root.setOnClickListener(new View.OnClickListener() {
+		cl_login_root.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		});
 		
-		et_password.setOnKeyListener(new View.OnKeyListener() {
+		et_login_password.setOnKeyListener(new View.OnKeyListener() {
 			@Override
 			public boolean onKey(View view, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -62,14 +62,14 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		});
 		
-		bt_login.setOnClickListener(new View.OnClickListener() {
+		bt_login_login.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				loginUser();
 			}
 		});
 		
-		bt_signup.setOnClickListener(new View.OnClickListener() {
+		tv_login_signup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -79,13 +79,13 @@ public class LoginActivity extends AppCompatActivity {
 	}
 	
 	private void loginUser() {
-		if (et_username.getText().toString().equals("")
-			|| et_password.getText().toString().equals("")) {
+		if (et_login_name.getText().toString().equals("")
+			|| et_login_password.getText().toString().equals("")) {
 			FancyToast.makeText(LoginActivity.this, "All fields are required", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
 			return;
 		}
 		
-		ParseUser.logInInBackground(et_username.getText().toString(), et_password.getText().toString(),
+		ParseUser.logInInBackground(et_login_name.getText().toString(), et_login_password.getText().toString(),
 				new LogInCallback() {
 					@Override
 					public void done(ParseUser user, ParseException e) {
