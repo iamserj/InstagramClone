@@ -2,6 +2,7 @@ package ru.iamserj.instagramclone;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -23,9 +24,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.parse.*;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -77,14 +82,38 @@ public class SharePictureTabFragment extends Fragment {
 			public void onClick(View v) {
 				
 				if (receivedImageBitmap != null) {
-					if (et_sharepic_description.getText().toString().equals("")) {  // no description
+					/*if (et_sharepic_description.getText().toString().equals("")) {  // no description
 					
-					} else {
+					} else {*/
+						// convert to ByteArrayStream in order to send to server
 						ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 						receivedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 						byte[] bytes = byteArrayOutputStream.toByteArray();
 						
-					}
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+						Date date = new Date(System.currentTimeMillis());
+						
+						ParseFile parseFile = new ParseFile(formatter.format(date) + ".png", bytes);// 20200605_100030.png
+						ParseObject parseObject = new ParseObject("Photo");                         // Parse class name is Photo
+						parseObject.put("picture", parseFile);                                      // Parse column name is picture
+						parseObject.put("pic_desc", et_sharepic_description.getText().toString());  // description column
+						parseObject.put("username", ParseUser.getCurrentUser().getUsername());      // username column
+						final ProgressDialog progressDialog = new ProgressDialog(getContext());
+						progressDialog.setMessage("Uploading image...");
+						progressDialog.show();
+						parseObject.saveInBackground(new SaveCallback() {
+							@Override
+							public void done(ParseException e) {
+								if (e == null) {
+									FancyToast.makeText(getContext(), "Image uploaded", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+								} else {
+									FancyToast.makeText(getContext(), "Error uploading image " + e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
+								}
+								progressDialog.dismiss();
+							}
+						});
+					
+					//}
 				} else {
 					FancyToast.makeText(getContext(), "Please, select an image", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 				}
