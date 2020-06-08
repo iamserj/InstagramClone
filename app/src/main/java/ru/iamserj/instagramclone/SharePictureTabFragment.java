@@ -11,9 +11,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,9 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import com.parse.*;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -39,8 +37,8 @@ import java.util.Locale;
 public class SharePictureTabFragment extends Fragment {
 	
 	private static final String TAG = "asdf";
-	private final int STORAGE_REQUEST_CODE = 1000;
-	private final int PICK_IMAGE_REQUEST_CODE = 2000;
+	private static final int STORAGE_REQUEST_CODE = 1000;
+	private static final int PICK_IMAGE_REQUEST_CODE = 2000;
 	
 	private ImageView iv_sharepic_placeholder;
 	private EditText et_sharepic_description;
@@ -69,7 +67,7 @@ public class SharePictureTabFragment extends Fragment {
 				// from SDK version 23 (Android 6.0 Marshmallow) we must get dangerous permission granted. ActivityCompat is used because this is Fragment
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 					// 1000 is a request code, unique for this fragment
-					requestPermissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_REQUEST_CODE);
+					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_REQUEST_CODE);
 				} else {
 					chooseImage();
 				}
@@ -85,33 +83,33 @@ public class SharePictureTabFragment extends Fragment {
 					/*if (et_sharepic_description.getText().toString().equals("")) {  // no description
 					
 					} else {*/
-						// convert to ByteArrayStream in order to send to server
-						ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-						receivedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-						byte[] bytes = byteArrayOutputStream.toByteArray();
-						
-						SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-						Date date = new Date(System.currentTimeMillis());
-						
-						ParseFile parseFile = new ParseFile(formatter.format(date) + ".png", bytes);// 20200605_100030.png
-						ParseObject parseObject = new ParseObject("Photo");                         // Parse class name is Photo
-						parseObject.put("picture", parseFile);                                      // Parse column name is picture
-						parseObject.put("pic_desc", et_sharepic_description.getText().toString());  // description column
-						parseObject.put("username", ParseUser.getCurrentUser().getUsername());      // username column
-						final ProgressDialog progressDialog = new ProgressDialog(getContext());
-						progressDialog.setMessage("Uploading image...");
-						progressDialog.show();
-						parseObject.saveInBackground(new SaveCallback() {
-							@Override
-							public void done(ParseException e) {
-								if (e == null) {
-									FancyToast.makeText(getContext(), "Image uploaded", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
-								} else {
-									FancyToast.makeText(getContext(), "Error uploading image " + e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
-								}
-								progressDialog.dismiss();
+					// convert to ByteArrayStream in order to send to server
+					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+					receivedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+					byte[] bytes = byteArrayOutputStream.toByteArray();
+					
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+					Date date = new Date(System.currentTimeMillis());
+					
+					ParseFile parseFile = new ParseFile(formatter.format(date) + ".png", bytes);// 20200605_100030.png
+					ParseObject parseObject = new ParseObject("Photo");                         // Parse class name is Photo
+					parseObject.put("picture", parseFile);                                      // Parse column name is picture
+					parseObject.put("pic_desc", et_sharepic_description.getText().toString());  // description column
+					parseObject.put("username", ParseUser.getCurrentUser().getUsername());      // username column
+					final ProgressDialog progressDialog = new ProgressDialog(getContext());
+					progressDialog.setMessage("Uploading image...");
+					progressDialog.show();
+					parseObject.saveInBackground(new SaveCallback() {
+						@Override
+						public void done(ParseException e) {
+							if (e == null) {
+								FancyToast.makeText(getContext(), "Image uploaded", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+							} else {
+								FancyToast.makeText(getContext(), "Error uploading image " + e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
 							}
-						});
+							progressDialog.dismiss();
+						}
+					});
 					
 					//}
 				} else {
@@ -147,27 +145,24 @@ public class SharePictureTabFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
-		if (requestCode == PICK_IMAGE_REQUEST_CODE) {       // 2000
-			
-			if (resultCode == Activity.RESULT_OK) {         // -1
-				// Image received                           // data => Intent { dat=content://media/external/images/media/99622 flg=0x1 (has extras) }
-				try {
-					Uri selectedImage = data.getData();                             // content://media/external/images/media/99622
-					String[] filePathColumn = { MediaStore.Images.Media.DATA };     // {"_data"}
-					Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-					cursor.moveToFirst();
-					int columnIndex = cursor.getColumnIndex(filePathColumn[0]);     // 0
-					String picturePath = cursor.getString(columnIndex);             // path of selected image. /storage/emulated/0/Snapseed/IMG_20200402_152548-01.jpeg
-					cursor.close();
-					
-					receivedImageBitmap = BitmapFactory.decodeFile(picturePath);    // convert image to Bitmap
-					iv_sharepic_placeholder.setImageBitmap(receivedImageBitmap);
-					
-				} catch (Exception error) {
-					error.printStackTrace();
-				}
+		if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {       // 2000, -1, not null
+			// Image received                           // data => Intent { dat=content://media/external/images/media/99622 flg=0x1 (has extras) }
+			try {
+				Uri selectedImage = data.getData();                             // content://media/external/images/media/99622
+				String[] filePathColumn = {MediaStore.Images.Media.DATA};     // {"_data"}
+				Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);     // 0
+				String picturePath = cursor.getString(columnIndex);             // path of selected image. /storage/emulated/0/Snapseed/IMG_20200402_152548-01.jpeg
+				cursor.close();
+				
+				receivedImageBitmap = BitmapFactory.decodeFile(picturePath);    // convert image to Bitmap
+				iv_sharepic_placeholder.setImageBitmap(receivedImageBitmap);
+				
+			} catch (Exception error) {
+				error.printStackTrace();
 			}
-			
 		}
+		
 	}
 }
