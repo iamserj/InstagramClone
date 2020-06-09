@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 				startActivity(intent);
+				finish();   // kill current activity
 			}
 		});
 		
@@ -122,5 +123,7 @@ public class MainActivity extends AppCompatActivity {
 	private void goSocialMediaActivity() {
 		Intent intent = new Intent(MainActivity.this, SocialMediaActivity.class);
 		startActivity(intent);
+		
+		finish();   // kill current activity
 	}
 }

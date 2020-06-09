@@ -74,6 +74,14 @@ public class SocialMediaActivity extends AppCompatActivity {
 			} else {
 				captureImage();
 			}
+		} else if (item.getItemId() == R.id.item_logoutUser) {
+			ParseUser.logOut();
+			
+			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+			startActivity(intent);
+			
+			finish();   // kill current activity
+			
 		}
 		
 		return super.onOptionsItemSelected(item);
@@ -102,7 +110,7 @@ public class SocialMediaActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {       // 4000, -1, not null
-			
+			// TODO: capture camera
 			// Image captured                           //
 			try {
 				Uri capturedImage = data.getData();                             //
@@ -145,28 +153,3 @@ public class SocialMediaActivity extends AppCompatActivity {
 		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

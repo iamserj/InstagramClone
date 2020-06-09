@@ -1,6 +1,7 @@
 package ru.iamserj.instagramclone;
 
 import android.os.Bundle;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UsersTabFragment extends Fragment {
+public class UsersTabFragment extends Fragment implements AdapterView.OnItemClickListener {
 	
 	private ListView lv_users_users;
 	private ArrayList arrayList;
@@ -43,6 +44,8 @@ public class UsersTabFragment extends Fragment {
 		arrayList = new ArrayList();
 		arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, arrayList);
 		
+		lv_users_users.setOnItemClickListener(UsersTabFragment.this);
+		
 		ParseQuery<ParseUser> parseQuery = ParseUser.getQuery();
 		parseQuery.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
 		parseQuery.findInBackground(new FindCallback<ParseUser>() {
@@ -64,5 +67,12 @@ public class UsersTabFragment extends Fragment {
 		});
 		
 		return view;
+	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	
+	
+	
 	}
 }

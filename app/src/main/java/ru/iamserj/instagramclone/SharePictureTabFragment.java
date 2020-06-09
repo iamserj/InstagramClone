@@ -41,6 +41,7 @@ public class SharePictureTabFragment extends Fragment {
 	private static final int PICK_IMAGE_REQUEST_CODE = 2000;
 	
 	private ImageView iv_sharepic_placeholder;
+	private ImageView iv_iconAddPhoto;
 	private EditText et_sharepic_description;
 	private Button bt_sharepic_share;
 	
@@ -58,6 +59,7 @@ public class SharePictureTabFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_share_picture_tab, container, false);
 		
 		iv_sharepic_placeholder = view.findViewById(R.id.iv_sharepic_placeholder);
+		iv_iconAddPhoto = view.findViewById(R.id.iv_iconAddPhoto);
 		et_sharepic_description = view.findViewById(R.id.et_sharepic_description);
 		bt_sharepic_share = view.findViewById(R.id.bt_sharepic_share);
 		
@@ -83,6 +85,11 @@ public class SharePictureTabFragment extends Fragment {
 					/*if (et_sharepic_description.getText().toString().equals("")) {  // no description
 					
 					} else {*/
+					
+					final ProgressDialog progressDialog = new ProgressDialog(getContext());
+					progressDialog.setMessage("Uploading image...");
+					progressDialog.show();
+					
 					// convert to ByteArrayStream in order to send to server
 					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 					receivedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
@@ -96,9 +103,7 @@ public class SharePictureTabFragment extends Fragment {
 					parseObject.put("picture", parseFile);                                      // Parse column name is picture
 					parseObject.put("pic_desc", et_sharepic_description.getText().toString());  // description column
 					parseObject.put("username", ParseUser.getCurrentUser().getUsername());      // username column
-					final ProgressDialog progressDialog = new ProgressDialog(getContext());
-					progressDialog.setMessage("Uploading image...");
-					progressDialog.show();
+					
 					parseObject.saveInBackground(new SaveCallback() {
 						@Override
 						public void done(ParseException e) {
@@ -158,11 +163,16 @@ public class SharePictureTabFragment extends Fragment {
 				
 				receivedImageBitmap = BitmapFactory.decodeFile(picturePath);    // convert image to Bitmap
 				iv_sharepic_placeholder.setImageBitmap(receivedImageBitmap);
-				
+				removeOpacity(iv_sharepic_placeholder);
+				iv_iconAddPhoto.setVisibility(View.GONE);
 			} catch (Exception error) {
 				error.printStackTrace();
 			}
 		}
 		
+	}
+	
+	private void removeOpacity(View view) {
+		view.setAlpha(1);
 	}
 }
