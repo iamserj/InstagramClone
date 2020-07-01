@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import com.parse.*;
 import com.shashank.sony.fancytoastlib.FancyToast;
+import libs.mjn.prettydialog.PrettyDialog;
+import libs.mjn.prettydialog.PrettyDialogCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +76,6 @@ public class UsersTabFragment extends Fragment implements AdapterView.OnItemClic
 	public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 		
 		final ProgressDialog dialog = new ProgressDialog(getContext());
-		//dialog.setMessage("Loading...");
-		dialog.show();
 		
 		ParseQuery<ParseObject> parseQuery = new ParseQuery<ParseObject>("Photo");
 		parseQuery.whereEqualTo("username", arrayListUsernames.get(position));
@@ -83,6 +83,7 @@ public class UsersTabFragment extends Fragment implements AdapterView.OnItemClic
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
 				if (objects.size() > 0 && e == null) {
+					dialog.show();
 					Intent intent = new Intent(getContext(), UsersPosts.class);
 					intent.putExtra("username", arrayListUsernames.get(position));
 					startActivity(intent);
@@ -105,7 +106,26 @@ public class UsersTabFragment extends Fragment implements AdapterView.OnItemClic
 			@Override
 			public void done(ParseUser user, ParseException e) {
 				if (user != null && e == null) {
-					//FancyToast.
+					
+					String userData = "\n\n"
+							+ "Name: " + user.get("profile_name") + "\n\n"
+							+ "Bio: " + user.get("profile_bio") + "\n\n"
+							+ "Profession: " + user.get("profile_profession") + "\n\n"
+							+ "Hobby: " + user.get("profile_hobby") + "\n\n"
+							+ "Sport: " + user.get("profile_sport") + "\n\n";
+					userData = userData.replace("null", "-");
+							
+					final PrettyDialog prettyDialog = new PrettyDialog(getContext());
+					prettyDialog.setTitle(user.getUsername() + "'s info")
+							.setMessage(userData)
+							.setIcon(R.drawable.ic_baseline_person_24)
+							.addButton("OK", R.color.pdlg_color_white, R.color.pdlg_color_green, new PrettyDialogCallback() {
+								@Override
+								public void onClick() {
+									prettyDialog.dismiss();
+								}
+							})
+							.show();
 				}
 			}
 		});

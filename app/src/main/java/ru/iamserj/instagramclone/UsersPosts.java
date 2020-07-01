@@ -70,6 +70,7 @@ public class UsersPosts extends AppCompatActivity {
 									iv_postPicture.setImageBitmap(bitmap);
 									
 									// TextView params
+									// TODO: add date before description
 									LinearLayout.LayoutParams paramsDescription = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 									paramsDescription.setMargins(5, 5, 5, 15);
 									tv_postDescription.setLayoutParams(paramsDescription);
